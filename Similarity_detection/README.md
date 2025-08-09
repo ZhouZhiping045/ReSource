@@ -44,13 +44,14 @@ To generate embeddings for decompiled code:
 
 ```bash
 
-python 1-direct\_code\_embedding.py 
+python 1-direct_code_embedding.py 
 
 
 
 To detect similarity between the decompiled code and the function library:
 
 python 2-detection.py 
+
 
 
 
