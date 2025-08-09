@@ -48,7 +48,7 @@ This repository provides a set of tools for recovering decompiled code, predicti
 
 
 
-\### 5. \*\*Similarity\_Evaluate\*\*
+\### 5. \*\*Code\_Similarity\_Evaluate\*\*
 
 &nbsp;  - This module is used to \*\*evaluate code similarity\*\*. It takes in the decompiled and recovered code and evaluates its similarity to the source code or library based on various similarity metrics such as token-level similarity, structural similarity, and semantic alignment.
 
@@ -111,6 +111,7 @@ Once the relevant modules are available, you can use them in the following manne
 
 
 \- \*\*construct\_semantic\_database\*\* and \*\*control\_flow\_predict\*\* modules are currently under development. These modules will be available after the paper is accepted and the repository is updated.
+
 
 
 
