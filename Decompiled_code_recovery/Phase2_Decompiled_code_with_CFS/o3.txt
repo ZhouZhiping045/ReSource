@@ -1,0 +1,148 @@
+predict control flow: {for (<){if (!)if (!=)if (==)elseif (<=)else}if (>)if (&&<){}elseif (){}else{}}
+int __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3)
+{
+  unsigned __int8 v3; 
+  unsigned __int16 v6; 
+
+  v3 = *(_BYTE *)(a1 + 17);
+  if ( v3 )
+  {
+    for ( __int64 v14 = 0LL; ; ++v14 )
+    {
+      v6 = *(_WORD *)(a1 + 18);
+      if ( !*(_BYTE *)(a1 + 2) )
+      {
+        if ( v6 )
+        {
+          unsigned __int8 *v7 = a2;
+          do
+            WriteBlobByte(a3, *v7++);
+          while ( v6 > v7 - a2 );
+          a2 = v7;
+        }
+      }
+      else
+      {
+        unsigned __int8 *v9 = a2 + 1;
+        unsigned __int8 v10 = *a2;
+        if ( v6 > 1u )
+        {
+          __int64 v11 = 1LL;
+          do
+          {
+            unsigned __int8 v12 = *v9++;
+            if ( v12 == v10 && v11 <= 62 )
+            {
+              ++v11;
+            }
+            else
+            {
+              if ( v11 != 1 || (v10 & 0xC0) == 0xC0 )
+                WriteBlobByte(a3, v11 | 0xC0u);
+              WriteBlobByte(a3, v10);
+              v10 = v12;
+              v11 = 1LL;
+            }
+          }
+          while ( v6 - 1 > v9 - 1 - a2 );
+          if ( v11 == 1 )
+          {
+            a2 = v9;
+            if ( (v10 & 0xC0) != 0xC0 )
+            {
+              WriteBlobByte(a3, v10);
+              continue;
+            }
+            v11 = 1LL;
+          }
+          WriteBlobByte(a3, v11 | 0xC0);
+          a2 = v9;
+        }
+        WriteBlobByte(a3, v10);
+      }
+      if ( v3 <= ++v14 )
+        return 1;
+    }
+  }
+  return 1;
+}
+/////
+predict control flow: {if (!)for (<&&!=)if (==){}for (&&<){switch{casecaseif ()elsecasecasecasecase}}if (!&&!){}elseif (){if (<){}else}}
+char *__fastcall c_escape(char *str)
+{
+    char *src = str;
+    char *cur = str;
+    size_t extra = 0;
+    int flag = 0;
+
+    if (!*cur)
+        return src;
+
+    char ch = *cur;
+    do {
+        while (1) {
+            if (ch == ' ') {
+                flag = 1;
+                break;
+            }
+            if (ch != '"') {
+                if (ch <= '"') {
+                    if ((unsigned char)(ch - '\a') > 6)
+                        break;
+                    goto inc;
+                }
+                if (ch != '\\')
+                    break;
+            }
+inc:
+            extra++;
+            ch = *++cur;
+            if (!ch)
+                goto alloc;
+        }
+        if (ch <= 31)
+            extra += 3;
+        ch = *++cur;
+    } while (*cur);
+
+alloc:
+    if (!extra && !flag)
+        return src;
+
+    char *dest = (char *)xmalloc(extra + (cur - src) + 3);
+    char *ptr = dest;
+    *ptr++ = '"';
+
+    for (char c = *src; c; c = *++src) {
+        switch (c) {
+        case '\a': c = 'a'; goto escape;
+        case '\b': c = 'b'; goto escape;
+        case '\t': c = 't'; goto escape;
+        case '\n': c = 'n'; goto escape;
+        case '\v': c = 'v'; goto escape;
+        case '\f': c = 'f'; goto escape;
+        case '\r': c = 'r'; goto escape;
+        case '"':
+        case '\\':
+escape:
+            *ptr++ = '\\';
+            *ptr++ = c;
+            break;
+        default:
+            if (c > 31) {
+                *ptr++ = c;
+            } else {
+                *ptr++ = '\\';
+                ptr[3] = (c & 7) + '0';
+                ptr[2] = ((c >> 3) & 7) + '0';
+                ptr[1] = ((c >> 6) & 3) + '0';
+                ptr += 4;
+            }
+            break;
+        }
+    }
+
+    *ptr++ = '"';
+    *ptr = 0;
+    return dest;
+}

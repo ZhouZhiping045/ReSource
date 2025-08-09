@@ -1,0 +1,82 @@
+predict control flow: {for (<){if (!=)if (==)elseif (<){}else{if (>)||==)for ( <){}}}}
+__int64 __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3)
+{
+    for (__int64 i = 0; i < *(unsigned __int8 *)(a1 + 17); ++i)
+    {
+        if (*(_BYTE *)(a1 + 2))
+        {
+            unsigned __int8 v7 = *a2++;
+            __int64 v9 = 1;
+            for (__int64 j = 0; j < *(unsigned __int16 *)(a1 + 18) - 1; ++j)
+            {
+                unsigned __int8 v8 = *a2++;
+                if (v8 == v7 && v9 < 63)
+                {
+                    ++v9;
+                }
+                else
+                {
+                    if (v9 > 1 || (v7 & 0xC0) == 0xC0)
+                        WriteBlobByte(a3, (v9 - 1) | 0xC0);
+                    WriteBlobByte(a3, v7);
+                    v7 = v8;
+                    v9 = 1;
+                }
+            }
+            if (v9 > 1 || (v7 & 0xC0) == 0xC0)
+                WriteBlobByte(a3, (v9 - 1) | 0xC0);
+            WriteBlobByte(a3, v7);
+        }
+        else
+        {
+            for (__int64 k = 0; k < *(unsigned __int16 *)(a1 + 18); ++k)
+            {
+                WriteBlobByte(a3, *a2++);
+            }
+        }
+    }
+    return 1;
+}
+/////
+predict control flow: {for (){if (==)elseif (){}else}if (!&&!){}while (){switch{casecaseif ()elsecasecase}}}
+char *__fastcall c_escape(char *a1)
+{
+    size_t len = 0;
+    int needs_quote = 0;
+
+    for (char *p = a1; *p; ++p) {
+        if (*p == ' ') {
+            needs_quote = 1;
+        } else {
+            int esc = c_escape_char(*p);
+            len += esc ? (esc == 1 ? 4 : 2) : 1;
+        }
+    }
+
+    if (!needs_quote && len == (size_t)(p - a1))
+        return a1;
+
+    char *buf = xmalloc(len + 3);
+    char *dst = buf;
+    *dst++ = '"';
+
+    for (char *p = a1; *p; ++p) {
+        int esc = c_escape_char(*p);
+        if (esc) {
+            *dst++ = '\\';
+            if (esc == 1) {
+                *dst++ = ((*p >> 6) & 3) + '0';
+                *dst++ = ((*p >> 3) & 7) + '0';
+                *dst++ = (*p & 7) + '0';
+            } else {
+                *dst++ = esc;
+            }
+        } else {
+            *dst++ = *p;
+        }
+    }
+
+    *dst++ = '"';
+    *dst = 0;
+    return buf;
+}

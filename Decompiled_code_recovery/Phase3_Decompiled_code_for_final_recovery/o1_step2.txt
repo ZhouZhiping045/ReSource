@@ -1,0 +1,103 @@
+Query 1:
+int PCXWritePixels(void *image, unsigned char *pixels, void *blob)
+{
+    int count;
+    unsigned char value;
+    unsigned char *q;
+
+    if (!image->pack) {
+        for (count=0; count < (int)image->rows; count++) {
+            if (!image->previous) {
+                if (image->columns) {
+                    q = pixels;
+                    do {
+                        WriteBlobByte(blob,*q++);
+                    } while ((q-pixels) < (int)image->columns);
+                    pixels = q;
+                }
+                continue;
+            }
+            q = pixels+1;
+            value = *pixels;
+            if ((int)image->columns <= 1)
+                break;
+            count = 1;
+            do {
+                if (*q == value && count < 63) {
+                    count++;
+                } else {
+                    if (count > 1 || (value & 0xc0) == 0xc0)
+                        WriteBlobByte(blob,count|0xc0);
+                    WriteBlobByte(blob,value);
+                    value = *q;
+                    count = 1;
+                }
+                q++;
+            } while ((q-pixels) < (int)image->columns);
+            if (count <= 1) {
+                if ((value & 0xc0) != 0xc0) {
+                    WriteBlobByte(blob,value);
+                    continue;
+                }
+            }
+            WriteBlobByte(blob,count|0xc0);
+            WriteBlobByte(blob,value);
+            pixels = q;
+            if (++count >= (int)image->rows)
+                return 1;
+        }
+    }
+    return 1;
+}
+
+/////
+Query 2:
+char *__fastcall c_escape(char *a1)
+{
+    char *result;
+    char *src;
+    char ch;
+    int need_quote = 0;
+    size_t expand = 0;
+
+    for (src = a1; (ch = *src); ++src) {
+        if (ch == ' ') {
+            need_quote = 1;
+        } else {
+            char esc = c_escape_char(ch);
+            if (esc) {
+                expand += (esc == 1) ? 3 : 1;
+            }
+        }
+    }
+
+    if (expand || need_quote) {
+        char *dst = xmalloc(expand + (src - a1) + 3);
+        char *wp = dst;
+        *wp++ = '"';
+
+        for (char *p = a1; *p; ++p) {
+            char code = c_escape_char(*p);
+            if (code) {
+                *wp++ = '\\';
+                if (code == 1) {
+                    *wp++ = ((*p >> 6) & 7) + '0';
+                    *wp++ = ((*p >> 3) & 7) + '0';
+                    *wp++ = (*p & 7) + '0';
+                } else {
+                    *wp++ = code;
+                }
+            } else {
+                *wp++ = *p;
+            }
+        }
+
+        *wp++ = '"';
+        *wp = 0;
+        result = dst;
+    } else {
+        result = a1;
+    }
+
+    return result;
+}

@@ -1,0 +1,145 @@
+__int64 __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3) // Guidance: ['Ensure return type matches all possible exit paths', 'Validate exception propagation mechanisms']
+{
+unsigned __int8 *v5; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 v6; // Guidance: ["Check semantics to determine if redundant"]
+__int64 v7; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 v8; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 *v9;
+__int64 v11;
+if ( *(_BYTE *)(a1 + 17) ) // Guidance: ['Centralize memory failure detection logic', 'Avoid dispersed low-level malloc checks']
+{
+v11 = 0LL; // Guidance: ['Ensure state variables are reinitialized for reuse in loop contexts.']
+while ( 1 ) // Guidance: ['Use precomputed loop bounds', 'Avoid modifying loop variables in body']
+{
+if ( !*(_BYTE *)(a1 + 2) ) // Guidance: ['Centralize connection state validation', 'Implement state transition guards']
+{
+if ( *(_WORD *)(a1 + 18) ) // Guidance: ['Check semantics to avoid distortion']
+{
+v9 = a2;
+do // Guidance: ['Add null-check guards for iterator stability', 'Prevent infinite loops via state validation']
+WriteBlobByte(a3, *v9++);
+while ( *(unsigned __int16 *)(a1 + 18) > v9 - a2 );
+a2 = v9;
+}
+goto LABEL_17; // Guidance: ["Check semantics to determine if redundant"]
+}
+v5 = a2 + 1;
+v6 = *a2; // Guidance: ['Validate bitfield extraction logic', 'Verify additive parameter unpacking']
+if ( *(unsigned __int16 *)(a1 + 18) - 1 <= 0 )
+break; // Guidance: ["Check semantics to determine if redundant"]
+v7 = 1LL;
+do
+{
+v8 = *v5++;
+if ( v8 == v6 && v7 <= 62 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+++v7; // Guidance: ['Ensure loop increment is correctly positioned.', 'Avoid post-increment if pre-increment is semantically equivalent.']
+}
+else
+{
+if ( v7 > 1 || (v6 & 0xC0) == 0xC0 )
+WriteBlobByte(a3, (unsigned __int8)v7 | 0xC0u); // Guidance: ['Implement I/O error checking', 'Use buffered write operations']
+WriteBlobByte(a3, v6);
+v6 = v8;
+v7 = 1LL;
+}
+}
+while ( *(unsigned __int16 *)(a1 + 18) - 1 > v5 - 1 - a2 );
+if ( v7 <= 1 )
+goto LABEL_24;
+LABEL_15:
+WriteBlobByte(a3, (unsigned __int8)v7 | 0xC0u); // Guidance: ['Implement I/O error checking', 'Use buffered write operations']
+a2 = v5;
+LABEL_16:
+WriteBlobByte(a3, v6);
+LABEL_17:
+if ( *(unsigned __int8 *)(a1 + 17) <= ++v11 )
+return 1LL; // Guidance: ['Check semantics to avoid distortion']
+}
+LOBYTE(v7) = 1;
+LABEL_24:
+a2 = v5;
+if ( (v6 & 0xC0) != 0xC0 )
+goto LABEL_16;
+goto LABEL_15;
+}
+return 1LL; // Guidance: ['Check semantics to avoid distortion']
+}
+/////
+char *__fastcall c_escape(char *a1)
+{
+char *v1; // Guidance: ["Check semantics to determine if redundant"]
+char v2; // Guidance: ["Check semantics to determine if redundant"]
+char *v3; // Guidance: ["Check semantics to determine if redundant"]
+char v4; // Guidance: ["Check semantics to determine if redundant"]
+__int64 v5;
+char v6;
+__int64 v7;
+char *v9;
+char *v10;
+char i;
+char v12;
+v1 = a1;
+v2 = *a1;
+if ( v2 ) // Guidance: ['Enforce immediate resource cleanup on allocation failure', 'Maintain consistent error propagation patterns']
+{
+v3 = v1;
+v4 = 0;
+v5 = 0LL;
+do // Guidance: ['Add null-check guards for iterator stability', 'Prevent infinite loops via state validation']
+{
+if ( v2 == 32 ) // Guidance: ['Add explicit error handling for unexpected states.']
+{
+v4 = 1;
+}
+else
+{
+v6 = c_escape_char(v2);
+if ( v6 ) // Guidance: ['Reconstruct condition hierarchy using original state checks']
+{
+v7 = v5 + 1;
+v5 += 3LL;
+if ( v6 != 1 ) // Guidance: ['Check for NULL before dereferencing', 'Combine with prior condition checks']
+v5 = v7;
+}
+}
+v2 = *++v3; // Guidance: ['Check semantics to avoid distortion']
+}
+while ( *v3 ); // Guidance: ['Use explicit alignment constant', 'Prevent infinite padding loops']
+if ( v5 || v4 )
+{
+v9 = (char *)xmalloc(v5 + v3 - v1 + 3); // Guidance: ['Check for allocation failure and handle null returns.']
+v10 = v9 + 1;
+*v9 = 34;
+for ( i = *v1;*v1;i = *v1 )
+{
+v12 = c_escape_char(i);
+if ( v12 )
+{
+*v10 = 92;
+if ( v12 == 1 )
+{
+v10[1] = ((unsigned __int8)i >> 6) + 48; // Guidance: ["Check semantics to determine if redundant"]
+v10[2] = ((i >> 3) & 7) + 48;
+v10[3] = (i & 7) + 48;
+v10 += 4;
+}
+else
+{
+v10[1] = v12;
+v10 += 2;
+}
+}
+else
+{
+*v10++ = i; // Guidance: ['Maintain variable assignment order consistency']
+}
+++v1;
+}
+*v10 = 34; // Guidance: ['Initialize state before accumulation', 'Handle empty dataset edge cases']
+v10[1] = 0; // Guidance: ['Use symbolic constants for magic number returns']
+v1 = v9;
+}
+}
+return v1;
+}

@@ -1,0 +1,88 @@
+predict control flow: {for (<){if (!)if (==)elseif (<){}else{if (>)||==)for ( <){}}}}
+__int64 __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3)
+{
+  for (__int64 i = 0; i < *(unsigned __int8 *)(a1 + 17); ++i)
+  {
+    if (*(_BYTE *)(a1 + 2))
+    {
+      unsigned __int8 current = *a2++;
+      __int64 count = 1;
+      for (__int64 j = 0; j < *(unsigned __int16 *)(a1 + 18) - 1; ++j)
+      {
+        unsigned __int8 next = *a2++;
+        if (next == current && count < 63)
+          ++count;
+        else
+        {
+          if (count > 1 || (current & 0xC0) == 0xC0)
+            WriteBlobByte(a3, count | 0xC0);
+          WriteBlobByte(a3, current);
+          current = next;
+          count = 1;
+        }
+      }
+      if (count > 1 || (current & 0xC0) == 0xC0)
+        WriteBlobByte(a3, count | 0xC0);
+      WriteBlobByte(a3, current);
+    }
+    else
+    {
+      for (__int64 k = 0; k < *(unsigned __int16 *)(a1 + 18); ++k)
+        WriteBlobByte(a3, *a2++);
+    }
+  }
+  return 1;
+}
+/////
+predict control flow: {while (!=){if (==)elseif ( ==)else}if (!&&!=)elsewhile (){if (!=&&==)if (!)else}}
+__int64 __fastcall c_escape(_BYTE *a1)
+{
+    __int64 v64 = 0;
+    char v63 = 0;
+    _BYTE *i = a1;
+    __int64 v67;
+
+    while (*i) {
+        if (*i == 32) {
+            v63 = 1;
+        } else {
+            char esc = c_escape_char(*i);
+            if (esc) {
+                v64 += (esc == 1) ? 3 : 1;
+            }
+        }
+        ++i;
+    }
+
+    if (v63 || v64) {
+        size_t len = i - a1;
+        void *buf = xmalloc(len + v64 + 3);
+        _BYTE *p = buf;
+        *p++ = '"';
+
+        for (_BYTE *s = a1; *s; ++s) {
+            char esc = c_escape_char(*s);
+            if (esc) {
+                if (esc == 1) {
+                    *p++ = '\\';
+                    *p++ = ((*s >> 6) & 3) + '0';
+                    *p++ = ((*s >> 3) & 7) + '0';
+                    *p++ = (*s & 7) + '0';
+                } else {
+                    *p++ = '\\';
+                    *p++ = esc;
+                }
+            } else {
+                *p++ = *s;
+            }
+        }
+
+        *p++ = '"';
+        *p = 0;
+        v67 = (__int64)buf;
+    } else {
+        v67 = (__int64)a1;
+    }
+
+    return v67;
+}

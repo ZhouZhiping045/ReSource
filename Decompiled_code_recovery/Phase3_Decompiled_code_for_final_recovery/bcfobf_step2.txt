@@ -1,0 +1,84 @@
+Query 1:
+int __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3)
+{
+    for (int i = 0; i < *(unsigned __int8 *)(a1 + 17); ++i) {
+        if (!*(_BYTE *)(a1 + 2)) {
+            for (int k = 0; k < *(unsigned __int16 *)(a1 + 18); ++k)
+                WriteBlobByte(a3, *a2++);
+            continue;
+        }
+        
+        unsigned __int8 current = *a2++;
+        int count = 1;
+        
+        for (int j = 0; j < *(unsigned __int16 *)(a1 + 18) - 1; ++j) {
+            unsigned __int8 next = *a2++;
+            if (next != current || count >= 63) {
+                if (count > 1 || (current & 0xC0) == 0xC0)
+                    WriteBlobByte(a3, count | 0xC0);
+                WriteBlobByte(a3, current);
+                current = next;
+                count = 1;
+            } else {
+                ++count;
+            }
+        }
+        
+        if (count > 1 || (current & 0xC0) == 0xC0)
+            WriteBlobByte(a3, count | 0xC0);
+        WriteBlobByte(a3, current);
+    }
+    return 1;
+}
+
+/////
+Query 2:
+__int64 __fastcall c_escape(__int64 a1)
+{
+    char *src = (char *)a1;
+    char *current = src;
+    __int64 needs_quote = 0;
+    __int64 calc_len = 0;
+
+    while (*current) {
+        if (*current == ' ') {
+            needs_quote = 1;
+        } else {
+            int esc = c_escape_char(*current);
+            if (esc) calc_len += (esc == 1) ? 3 : 1;
+            else calc_len++;
+        }
+        current++;
+    }
+
+    if (!needs_quote && calc_len == (current - src)) {
+        return a1;
+    }
+
+    size_t src_len = current - src;
+    size_t total = calc_len + src_len + 3;
+    unsigned char *buf = xmalloc(total);
+    unsigned char *p = buf;
+
+    *p++ = '"';
+    for (current = src; *current; current++) {
+        int esc = c_escape_char(*current);
+        
+        if (esc) {
+            *p++ = '\\';
+            if (esc == 1) {
+                *p++ = ((*current >> 6) & 3) + '0';
+                *p++ = ((*current >> 3) & 7) + '0';
+                *p++ = (*current & 7) + '0';
+            } else {
+                *p++ = esc;
+            }
+        } else {
+            *p++ = *current;
+        }
+    }
+    *p++ = '"';
+    *p = 0;
+
+    return (__int64)buf;
+}

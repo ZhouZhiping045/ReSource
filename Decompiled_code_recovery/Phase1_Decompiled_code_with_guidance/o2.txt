@@ -1,0 +1,153 @@
+__int64 __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3) // Guidance: ['Ensure return type matches all possible exit paths', 'Validate exception propagation mechanisms']
+{
+unsigned __int16 v5; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 *v6; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 *v8; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 v9; // Guidance: ["Check semantics to determine if redundant"]
+__int64 v10;
+unsigned __int8 v11;
+__int64 v12;
+__int64 v13;
+if ( *(_BYTE *)(a1 + 17) ) // Guidance: ['Centralize connection state validation', 'Implement state transition guards']
+{
+v13 = 0LL; // Guidance: ['Ensure state variables are reinitialized for reuse in loop contexts.']
+while ( 1 ) // Guidance: ['Ensure loop termination conditions prevent infinite cycles']
+{
+v5 = *(_WORD *)(a1 + 18); // Guidance: ['Save original state to temporary variable before modification']
+if ( !*(_BYTE *)(a1 + 2) ) // Guidance: ['Check semantics to avoid distortion']
+{
+if ( v5 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+v6 = a2; // Guidance: ['Validate bitfield extraction logic', 'Verify additive parameter unpacking']
+do // Guidance: ['Add null-check guards for iterator stability', 'Prevent infinite loops via state validation']
+WriteBlobByte(a3, *v6++);
+while ( *(unsigned __int16 *)(a1 + 18) > v6 - a2 ); // Guidance: ['Check semantics to avoid distortion']
+a2 = v6; // Guidance: ["Check semantics to determine if redundant"]
+}
+goto LABEL_8; // Guidance: ["Check semantics to determine if redundant"]
+}
+v8 = a2 + 1;
+v9 = *a2;
+if ( v5 <= 1u )
+goto LABEL_23; // Guidance: ["Check semantics to determine if redundant"]
+v10 = 1LL;
+do
+{
+v11 = *v8++;
+if ( v11 == v9 && v10 <= 62 )
+{
+++v10;
+}
+else
+{
+if ( v10 != 1 || (v9 & 0xC0) == 0xC0 )
+WriteBlobByte(a3, (unsigned __int8)v10 | 0xC0u); // Guidance: ['Implement I/O error checking', 'Use buffered write operations']
+v12 = v9;
+v9 = v11;
+WriteBlobByte(a3, v12);
+v10 = 1LL;
+}
+}
+while ( *(unsigned __int16 *)(a1 + 18) - 1 > v8 - 1 - a2 );
+if ( v10 == 1 )
+{
+LABEL_23:
+a2 = v8;
+if ( (v9 & 0xC0) != 0xC0 )
+goto LABEL_22;
+v10 = 1LL;
+}
+LOBYTE(v10) = v10 | 0xC0;
+a2 = v8;
+WriteBlobByte(a3, v10);
+LABEL_22:
+WriteBlobByte(a3, v9);
+LABEL_8:
+if ( *(unsigned __int8 *)(a1 + 17) <= ++v13 )
+return 1LL; // Guidance: ['Check semantics to avoid distortion']
+}
+}
+return 1LL; // Guidance: ['Check semantics to avoid distortion']
+}
+/////
+char *__fastcall c_escape(char *a1)
+{
+char *v1; // Guidance: ["Check semantics to determine if redundant"]
+char v2; // Guidance: ["Check semantics to determine if redundant"]
+char *v3; // Guidance: ["Check semantics to determine if redundant"]
+__int64 v4; // Guidance: ["Check semantics to determine if redundant"]
+char v5;
+char v6;
+__int64 v7;
+_BYTE *v9;
+char v10;
+_BYTE *v11;
+_WORD *i;
+char v13;
+char *v14;
+v1 = a1;
+v2 = *a1;
+if ( !v2 ) // Guidance: ['Verify function parameters match expected types', 'Check error return handling']
+return v1; // Guidance: ["Check semantics to determine if redundant"]
+v3 = v1;
+v4 = 0LL;
+do // Guidance: ['Add null-check guards for iterator stability', 'Prevent infinite loops via state validation']
+{
+while ( v2 == 32 ) // Guidance: ['Implement boundary checks for tree navigation', 'Add loop invariants for structural validation']
+{
+v2 = *++v3; // Guidance: ["Check semantics to determine if redundant"]
+v6 = 1;
+if ( !*v3 ) // Guidance: ['Verify function parameters match expected types', 'Check error return handling']
+goto LABEL_9; // Guidance: ["Check semantics to determine if redundant"]
+}
+v5 = c_escape_char(v2);
+if ( v5 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+v7 = v4 + 1;
+v4 += 3LL;
+if ( v5 != 1 ) // Guidance: ["Check semantics to determine if redundant"]
+v4 = v7;
+}
+v2 = *++v3; // Guidance: ["Check semantics to determine if redundant"]
+}
+while ( *v3 ); // Guidance: ["Initialize 'number_lines' to 1 only once"]
+LABEL_9:
+if ( !v4 && !v6 )
+return v1; // Guidance: ["Check semantics to determine if redundant"]
+v9 = xmalloc(v4 + v3 - v1 + 3); // Guidance: ['Precompute conditional strings', 'Validate input parameters before use']
+*v9 = 34;
+v10 = *v1;
+v11 = v9;
+for ( i = v9 + 1;*v1;v10 = *v1 )
+{
+while ( 1 )
+{
+v13 = c_escape_char(v10);
+if ( v13 )
+break;
+++v1;
+*v14 = v10; // Guidance: ["Check semantics to determine if redundant"]
+i = v14 + 1;
+v10 = *v1;
+if ( !*v1 )
+goto LABEL_19;
+}
+*v14 = 92;
+if ( v13 == 1 )
+{
+i = v14 + 4;
+*((_BYTE *)i - 3) = ((unsigned __int8)v10 >> 6) + 48; // Guidance: ['Prevent overflow with explicit masking', 'Validate shift direction']
+*((_BYTE *)i - 1) = (v10 & 7) + 48;
+*((_BYTE *)i - 2) = ((v10 >> 3) & 7) + 48;
+}
+else
+{
+v14[1] = v13;
+i = v14 + 2;
+}
+++v1;
+}
+LABEL_19:
+*i = 34;
+return v11; // Guidance: ['Ensure resource cleanup before premature returns']
+}

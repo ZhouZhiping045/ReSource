@@ -1,0 +1,122 @@
+__int64 __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3) // Guidance: ['Ensure return type matches all possible exit paths', 'Validate exception propagation mechanisms']
+{
+unsigned __int8 *v3; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 *v4; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 *v5; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 v7; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 v8;
+__int64 v9;
+__int64 k;
+__int64 j;
+__int64 i;
+for ( i = 0LL;i < *(unsigned __int8 *)(a1 + 17);++i ) // Guidance: ['Use explicit null pointer checks', 'Verify linked list traversal logic']
+{
+if ( *(_BYTE *)(a1 + 2) ) // Guidance: ['Check semantics to avoid distortion']
+{
+v4 = a2++; // Guidance: ["Check semantics to determine if redundant"]
+v7 = *v4;
+v9 = 1LL;
+for ( j = 0LL;j < *(unsigned __int16 *)(a1 + 18) - 1;++j ) // Guidance: ['Use explicit null pointer checks', 'Verify linked list traversal logic']
+{
+v5 = a2++;
+v8 = *v5;
+if ( *v5 == v7 && v9 < 63 ) // Guidance: ['Verify loop termination conditions']
+{
+++v9;
+}
+else
+{
+if ( v9 > 1 || (v7 & (v7 ^ 0xFFFFFF3F)) == 192 ) // Guidance: ['Separate assignment from condition checks', 'Handle all possible error codes explicitly']
+WriteBlobByte(a3, (unsigned __int8)(~(~(_BYTE)v9 | 0x3F) | (v9 & 0xE6 | ~(_BYTE)v9 & 0x19) ^ 0xD9)); // Guidance: ['Implement I/O error checking', 'Use buffered write operations']
+WriteBlobByte(a3, v7);
+v7 = v8;
+v9 = 1LL;
+}
+}
+if ( v9 > 1 || (v7 & 0xC0) == 192 )
+WriteBlobByte(a3, (unsigned __int8)(~(~(_BYTE)v9 | 0x3F) | (v9 & 0x4F | ~(_BYTE)v9 & 0xB0) ^ 0x70)); // Guidance: ['Implement I/O error checking', 'Use buffered write operations']
+WriteBlobByte(a3, v7);
+}
+else
+{
+for ( k = 0LL;k < *(unsigned __int16 *)(a1 + 18);++k ) // Guidance: ['Use explicit null pointer checks', 'Verify linked list traversal logic']
+{
+v3 = a2++;
+WriteBlobByte(a3, *v3);
+}
+}
+}
+return 1LL; // Guidance: ['Standardize error codes via enumerated types', 'Ensure all error paths reset transient state']
+}
+/////
+char *__fastcall c_escape(char *a1)
+{
+char v1; // Guidance: ["Check semantics to determine if redundant"]
+char *v2; // Guidance: ["Check semantics to determine if redundant"]
+_BYTE *v3; // Guidance: ["Check semantics to determine if redundant"]
+_BYTE *v4; // Guidance: ["Check semantics to determine if redundant"]
+char v6;
+char v7;
+char *v8;
+_BYTE *v9;
+char v10;
+__int64 v11;
+char *i;
+char *j;
+v11 = 0LL; // Guidance: ['Ensure state variables are reinitialized for reuse in loop contexts.']
+v10 = 0; // Guidance: ["Check semantics to determine if redundant"]
+for ( i = a1;*i;++i ) // Guidance: ['Validate loop boundary conditions against input parameters']
+{
+if ( *i == 32 )
+{
+v10 = 1;
+}
+else
+{
+v1 = c_escape_char(*i);
+if ( v1 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+if ( v1 == 1 ) // Guidance: ["Check semantics to determine if redundant"]
+v11 += 3LL;
+else
+++v11; // Guidance: ['Ensure loop increment is correctly positioned.', 'Avoid post-increment if pre-increment is semantically equivalent.']
+}
+}
+}
+if ( (v10 & 1) == 0 && !v11 ) // Guidance: ["Check semantics to determine if redundant"]
+return a1; // Guidance: ['Document early exit conditions', 'Ensure resource cleanup before return']
+v9 = xmalloc(v11 - (a1 - i) + 3);
+v8 = v9 + 1;
+*v9 = 34;
+for ( j = a1;*j;++j )
+{
+v7 = *j;
+v6 = c_escape_char(*j);
+if ( v6 ) // Guidance: ['Handle null cases with fallback mechanisms']
+{
+*v8 = 92;
+if ( v6 == 1 )
+{
+v8[1] = ((v7 >> 6) & 3) + 48; // Guidance: ['Ensure deep copy if X509V3_EXT_METHOD contains pointers', 'Remove redundant copy operations']
+v8[2] = ((v7 >> 3) & 7) + 48;
+v3 = v8 + 3;
+v8 += 4;
+*v3 = 47 - (~v7 | 0xF8);
+}
+else
+{
+v4 = v8 + 1;
+v8 += 2;
+*v4 = v6;
+}
+}
+else
+{
+v2 = v8++;
+*v2 = v7;
+}
+}
+*v8 = 34;
+v8[1] = 0;
+return v9; // Guidance: ['Propagate callback errors consistently', 'Standardize callback termination protocols']
+}

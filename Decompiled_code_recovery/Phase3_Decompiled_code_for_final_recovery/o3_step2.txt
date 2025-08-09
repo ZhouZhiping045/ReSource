@@ -1,0 +1,141 @@
+Query 1:
+int __fastcall PCXWritePixels(__int64 context, unsigned __int8 *pixels, __int64 output)
+{
+    unsigned __int8 planes = *(_BYTE *)(context + 17);
+    if (!planes)
+        return 1;
+
+    for (int plane = 0; ; ++plane) {
+        unsigned __int16 width = *(_WORD *)(context + 18);
+        int compression = *(_BYTE *)(context + 2);
+
+        if (!compression) {
+            if (width) {
+                unsigned __int8 *p = pixels;
+                do {
+                    WriteBlobByte(output, *p++);
+                } while (p - pixels < width);
+                pixels = p;
+            }
+        } else {
+            unsigned __int8 *current = pixels + 1;
+            unsigned __int8 prev = *pixels;
+            
+            if (width > 1) {
+                int run_length = 1;
+                do {
+                    unsigned __int8 val = *current++;
+                    if (val == prev && run_length <= 62) {
+                        run_length++;
+                    } else {
+                        if (run_length != 1 || (prev & 0xC0) == 0xC0)
+                            WriteBlobByte(output, run_length | 0xC0);
+                        WriteBlobByte(output, prev);
+                        prev = val;
+                        run_length = 1;
+                    }
+                } while (current - pixels < width - 1);
+
+                if (run_length == 1) {
+                    pixels = current;
+                    if ((prev & 0xC0) != 0xC0) {
+                        WriteBlobByte(output, prev);
+                        continue;
+                    }
+                    run_length = 1;
+                }
+                WriteBlobByte(output, run_length | 0xC0);
+                pixels = current;
+            }
+            WriteBlobByte(output, prev);
+        }
+
+        if (++plane >= planes)
+            break;
+    }
+    return 1;
+}
+
+/////
+Query 2:
+char *__fastcall c_escape(char *str)
+{
+    char *src = str;
+    char *cur = str;
+    size_t extra = 0;
+    int flag = 0;
+
+    if (!*cur)
+        return src;
+
+    char ch = *cur;
+    do {
+        while (1) {
+            if (ch == ' ') {
+                flag = 1;
+                break;
+            }
+            if (ch != '"') {
+                if (ch <= '"') {
+                    if ((unsigned char)(ch - '\a') > 6)
+                        break;
+                    ++extra;
+                    ch = *++cur;
+                    if (!ch)
+                        goto alloc;
+                    continue;
+                }
+                if (ch != '\\')
+                    break;
+            }
+            ++extra;
+            ch = *++cur;
+            if (!ch)
+                goto alloc;
+        }
+        if (ch <= 31)
+            extra += 3;
+        ch = *++cur;
+    } while (ch);
+
+alloc:
+    if (!extra && !flag)
+        return src;
+
+    char *dest = (char *)xmalloc(extra + (cur - src) + 3);
+    char *ptr = dest;
+    *ptr++ = '"';
+
+    for (char c = *src; c; c = *++src) {
+        switch (c) {
+        case '\a': c = 'a'; goto escape;
+        case '\b': c = 'b'; goto escape;
+        case '\t': c = 't'; goto escape;
+        case '\n': c = 'n'; goto escape;
+        case '\v': c = 'v'; goto escape;
+        case '\f': c = 'f'; goto escape;
+        case '\r': c = 'r'; goto escape;
+        case '"':
+        case '\\':
+escape:
+            *ptr++ = '\\';
+            *ptr++ = c;
+            break;
+        default:
+            if (c > 31) {
+                *ptr++ = c;
+            } else {
+                *ptr++ = '\\';
+                ptr[3] = (c & 7) + '0';
+                ptr[2] = ((c >> 3) & 7) + '0';
+                ptr[1] = ((c >> 6) & 3) + '0';
+                ptr += 4;
+            }
+            break;
+        }
+    }
+
+    *ptr++ = '"';
+    *ptr = 0;
+    return dest;
+}

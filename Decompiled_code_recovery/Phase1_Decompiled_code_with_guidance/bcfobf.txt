@@ -1,0 +1,211 @@
+__int64 __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3) // Guidance: ['Ensure return type matches all possible exit paths', 'Validate exception propagation mechanisms']
+{
+unsigned __int8 *v3; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 *v4; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 *v5; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 v7; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 v8;
+__int64 v9;
+__int64 k;
+__int64 j;
+__int64 i;
+for ( i = 0LL;i < *(unsigned __int8 *)(a1 + 17);++i ) // Guidance: ['Use explicit null pointer checks', 'Verify linked list traversal logic']
+{
+if ( *(_BYTE *)(a1 + 2) ) // Guidance: ['Check semantics to avoid decompilation distortion']
+{
+v4 = a2++; // Guidance: ["Check semantics to determine if redundant"]
+v7 = *v4;
+v9 = 1LL;
+for ( j = 0LL;j < *(unsigned __int16 *)(a1 + 18) - 1;++j ) // Guidance: ['Use explicit null pointer checks', 'Verify linked list traversal logic']
+{
+v5 = a2++;
+v8 = *v5;
+if ( *v5 == v7 && v9 < 63 ) // Guidance: ['Verify loop termination conditions']
+{
+++v9;
+}
+else
+{
+if ( v9 > 1 || (v7 & 0xC0) == 192 )
+WriteBlobByte(a3, (unsigned __int8)v9 | 0xC0u); // Guidance: ['Implement I/O error checking', 'Use buffered write operations']
+WriteBlobByte(a3, v7);
+v7 = v8;
+v9 = 1LL;
+}
+}
+if ( v9 > 1 || (v7 & 0xC0) == 192 )
+WriteBlobByte(a3, (unsigned __int8)v9 | 0xC0u); // Guidance: ['Implement I/O error checking', 'Use buffered write operations']
+WriteBlobByte(a3, v7);
+}
+else
+{
+for ( k = 0LL;k < *(unsigned __int16 *)(a1 + 18);++k ) // Guidance: ['Use explicit null pointer checks', 'Verify linked list traversal logic']
+{
+v3 = a2++;
+WriteBlobByte(a3, *v3);
+}
+}
+}
+return 1LL; // Guidance: ['Standardize error codes via enumerated types', 'Ensure all error paths reset transient state']
+}
+/////
+__int64 __fastcall c_escape(__int64 a1) // Guidance: ['Check semantics to avoid decompilation distortion']
+{
+__int64 *v1; // Guidance: ["Check semantics to determine if redundant"]
+int v2; // Guidance: ["Check semantics to determine if redundant"]
+bool v3; // Guidance: ["Check semantics to determine if redundant"]
+__int64 *v4; // Guidance: ["Check semantics to determine if redundant"]
+__int64 v5;
+__int64 *v6;
+__int64 *v7;
+_BYTE *v8;
+char *v9;
+bool v10;
+__int64 *v11;
+int v12;
+char v13;
+char *v14;
+char *v15;
+char v16;
+_BYTE *v17;
+char v18;
+_BYTE *v19;
+char v20;
+_BYTE *v21;
+__int64 *v22;
+_BYTE *v23;
+char v24;
+_BYTE *v25;
+__int64 *v26;
+_BYTE *v27;
+__int64 v29;
+int v30;
+int v31;
+bool v33;
+char v34;
+int v35;
+_BOOL4 v36;
+bool v37;
+__int64 *v39;
+char *v40;
+__int64 *v41;
+__int64 *v42;
+__int64 *v43;
+__int64 *v44;
+__int64 *v45;
+__int64 *v46;
+char **v47;
+__int64 *v48;
+__int64 *v49;
+__int64 v50;
+__int64 v51;
+v50 = a1; // Guidance: ["Check semantics to determine if redundant"]
+*(&v29 - 2) = a1;
+*(&v29 - 2) = 0LL; // Guidance: ["Check semantics to determine if redundant"]
+*((_BYTE *)&v29 - 16) = 0; // Guidance: ["Check semantics to determine if redundant"]
+*(&v29 - 2) = *(&v29 - 2); // Guidance: ["Check semantics to determine if redundant"]
+v49 = &v29 - 2;
+v48 = &v29 - 2;
+v47 = (char **)(&v29 - 2);
+v46 = &v29 - 2;
+v45 = &v29 - 2;
+v44 = &v29 - 2;
+v43 = &v29 - 2;
+v42 = &v29 - 2;
+v41 = &v29 - 2;
+v40 = (char *)&v51;
+v39 = &v29 - 2;
+while ( **v47 != 0 ) // Guidance: ['Use pre-decrement for counter validation', 'Add loop invariant checks']
+{
+v1 = v44;
+*(_BYTE *)v44 = **v47;
+v2 = *(char *)v1;
+v37 = v2 == 32;
+if ( v2 == 32 ) // Guidance: ['Add default case validation', 'Use enum for magic number cases']
+{
+*(_BYTE *)v45 = 1;
+}
+else
+{
+v3 = c_escape_char(**v47);
+v36 = v3;
+if ( v3 ) // Guidance: ['Use pointer nullity check for loop termination.']
+{
+v35 = v36 - 1;
+if ( v36 ) // Guidance: ['Preserve equality check for zero', 'Avoid shortcut evaluations']
+*v46 += 3LL; // Guidance: ["Check semantics to determine if redundant"]
+else
+++*v46;
+}
+}
+++*v47;
+}
+v34 = *(_BYTE *)v45;
+if ( (v34 & 1) != 0 || (v33 = *v46 != 0) ) // Guidance: ['Check semantics to avoid decompilation distortion']
+{
+v4 = v43;
+*v43 = (__int64)&(*v47)[-*v48];
+v5 = xmalloc(*v46 + *v4 + 3);
+v6 = v42;
+*v42 = v5;
+v7 = v41;
+*v41 = *v6;
+v8 = (_BYTE *)(*v7)++;
+*v8 = 34;
+for ( *v47 = (char *)*v48;**v47 != 0;++*v47 ) // Guidance: ['Validate character peek/advance logic consistency']
+{
+v9 = v40;
+*v40 = **v47;
+v10 = c_escape_char(*v9);
+v11 = v39;
+*(_BYTE *)v39 = v10;
+v12 = *(char *)v11;
+v31 = v12;
+if ( v12 )
+{
+v30 = v31 - 1;
+v22 = v41;
+v23 = (_BYTE *)*v41;
+if ( v31 == 1 )
+{
+++*v41;
+*v23 = 92;
+v15 = v40;
+v16 = ((*v40 >> 6) & 3) + 48;
+v17 = (_BYTE *)(*v22)++;
+*v17 = v16;
+v18 = ((*v15 >> 3) & 7) + 48;
+v19 = (_BYTE *)(*v22)++;
+*v19 = v18;
+v20 = (*v15 & 7) + 48;
+v21 = (_BYTE *)(*v22)++;
+*v21 = v20;
+}
+else
+{
+++*v41;
+*v23 = 92;
+v24 = *(_BYTE *)v39;
+v25 = (_BYTE *)(*v22)++;
+*v25 = v24;
+}
+}
+else
+{
+v13 = *v40;
+v14 = (char *)(*v41)++;
+*v14 = v13;
+}
+}
+v26 = v41;
+v27 = (_BYTE *)(*v41)++;
+*v27 = 34;
+*(_BYTE *)*v26 = 0;
+*v49 = *v42;
+}
+else
+{
+*v49 = *v48;
+}
+return *v49;
+}

@@ -1,0 +1,157 @@
+predict control flow: {for (<){if (==)if (<){}elseif (!=){}if (>){}else{}if (){}}}
+__int64 __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3)
+{
+  __int64 result; 
+  unsigned __int8 *v6; 
+  unsigned __int8 v7; 
+  unsigned __int8 v8; 
+  __int64 v9; 
+  int v10; 
+
+  for ( result = 0LL; ; ++result )
+  {
+    if ( result >= *(unsigned __int8 *)(a1 + 17) )
+      return 1LL;
+    if ( *(_BYTE *)(a1 + 2) )
+    {
+      v6 = a2++;
+      v7 = *v6;
+      v9 = 1LL;
+      v10 = 0;
+    }
+    else
+    {
+      v9 = 1LL;
+      v10 = 0;
+    }
+    while ( 1 )
+    {
+      if ( v10 >= (int)*(unsigned __int16 *)(a1 + 18) - 1 )
+        break;
+      v8 = *a2++;
+      if ( v8 == v7 )
+      {
+        if ( v9 >= 63 )
+        {
+          WriteBlobByte(a3, v9 | 0xC0u);
+          WriteBlobByte(a3, v7);
+          v9 = 1LL;
+        }
+        else
+        {
+          ++v9;
+        }
+      }
+      else
+      {
+        if ( v9 > 1 )
+        {
+          WriteBlobByte(a3, v9 | 0xC0u);
+          WriteBlobByte(a3, v7);
+        }
+        else
+        {
+          WriteBlobByte(a3, v7);
+        }
+        v7 = v8;
+        v9 = 1LL;
+      }
+      ++v10;
+    }
+    if ( v9 > 1 )
+    {
+      WriteBlobByte(a3, v9 | 0xC0u);
+      WriteBlobByte(a3, v7);
+    }
+    else
+    {
+      WriteBlobByte(a3, v7);
+    }
+  }
+}
+/////
+predict control flow: {for (){if ()if (==)elseif (<)}}
+char *__fastcall c_escape(char *a1)
+{
+    char *v24 = a1;
+    size_t buffer_size = 0;
+    char *result = NULL;
+    int state = -1142143274;
+
+    while (1) {
+        switch (state) {
+        case -2144662679:
+            result = (char *)xmalloc(buffer_size + (v24 - a1) + 3);
+            char *write_ptr = result + 1;
+            *result = '"';
+            v24 = a1;
+            state = 1452866522;
+            break;
+
+        case 1452866522:
+            if (*v24) {
+                state = -1257683769;
+            } else {
+                state = 1885487505;
+            }
+            break;
+
+        case -1257683769: {
+            char current = *v24;
+            char escape_type = c_escape_char(current);
+            
+            if (escape_type < 1) {
+                state = -384896809;
+            } else {
+                state = -283062881;
+            }
+            break;
+        }
+
+        case -283062881:
+            if (escape_type == 1) {
+                buffer_size += 3;
+                state = -567128970;
+            } else {
+                buffer_size += 2;
+                state = -613484905;
+            }
+            break;
+
+        case -384896809:
+            if (!escape_type) {
+                state = 2071086969;
+            } else {
+                state = 2114144697;
+            }
+            break;
+
+        case 1885487505:
+            if (buffer_size) {
+                state = -2144662679;
+            } else {
+                state = -1487807926;
+            }
+            break;
+
+        case -1487807926:
+            return a1;
+
+        case 1399157883:
+            return result;
+
+        default:
+            if (state == -1142143274) {
+                if (*v24) {
+                    state = 810207304;
+                } else {
+                    state = 358751484;
+                }
+            }
+            // Handle other state transitions
+            v24++;
+            state = -1142143274;
+            break;
+        }
+    }
+}

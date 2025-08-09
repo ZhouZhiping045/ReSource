@@ -1,0 +1,103 @@
+predict control flow: {for (<){if (!)if (==)elseif (<){}else{if (>)||==)for ( <)if (!=){}}}}
+int __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3)
+{
+  for (int i = 0; i < *(unsigned __int8 *)(a1 + 17); ++i) {
+    if (*(_BYTE *)(a1 + 2)) {
+      unsigned __int8 current = *a2++;
+      int count = 1;
+      for (int j = 0; j < *(unsigned __int16 *)(a1 + 18) - 1; ++j) {
+        unsigned __int8 next = *a2++;
+        if (next == current && count < 63) {
+          ++count;
+        } else {
+          if (count > 1 || (current & 0xC0) == 0xC0)
+            WriteBlobByte(a3, count | 0xC0);
+          WriteBlobByte(a3, current);
+          current = next;
+          count = 1;
+        }
+      }
+      if (count > 1 || (current & 0xC0) == 0xC0)
+        WriteBlobByte(a3, count | 0xC0);
+      WriteBlobByte(a3, current);
+    } else {
+      for (int k = 0; k < *(unsigned __int16 *)(a1 + 18); ++k)
+        WriteBlobByte(a3, *a2++);
+    }
+  }
+  return 1;
+}
+/////
+predict control flow: {while (){if (==)elseif (){}else}if (!&&!=)while () {if (||==)if (!=)}}
+__int64 __fastcall c_escape(__int64 a1)
+{
+    char *current;
+    _BYTE *dest;
+    __int64 result;
+    int needs_escape;
+    int escape_type;
+    char ch;
+
+    current = (char *)a1;
+    __int64 length = 0;
+    _BOOL8 has_space = 0;
+
+    while (*current)
+    {
+        if (*current == ' ')
+        {
+            has_space = 1;
+        }
+        else
+        {
+            needs_escape = c_escape_char(*current);
+            if (needs_escape)
+                length += needs_escape == 1 ? 3 : 1;
+            else
+                length++;
+        }
+        current++;
+    }
+
+    if (has_space || length != (current - (char *)a1))
+    {
+        size_t total_len = length + (current - (char *)a1) + 3;
+        dest = xmalloc(total_len);
+        _BYTE *ptr = dest;
+
+        *ptr++ = '"';
+        for (current = (char *)a1; *current; current++)
+        {
+            ch = *current;
+            escape_type = c_escape_char(ch);
+
+            if (escape_type)
+            {
+                *ptr++ = '\\';
+                if (escape_type == 1)
+                {
+                    *ptr++ = (ch >> 6 & 3) + '0';
+                    *ptr++ = (ch >> 3 & 7) + '0';
+                    *ptr++ = (ch & 7) + '0';
+                }
+                else
+                {
+                    *ptr++ = escape_type;
+                }
+            }
+            else
+            {
+                *ptr++ = ch;
+            }
+        }
+        *ptr++ = '"';
+        *ptr = 0;
+        result = (__int64)dest;
+    }
+    else
+    {
+        result = a1;
+    }
+
+    return result;
+}

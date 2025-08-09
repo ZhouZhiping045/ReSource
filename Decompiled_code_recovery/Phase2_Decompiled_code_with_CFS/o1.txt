@@ -1,0 +1,102 @@
+predict control flow: {for (<){if (!)if (!=)if (>||>){}if (==)elseif (>){}}if ()}
+int PCXWritePixels(void *image, unsigned char *pixels, void *blob)
+{
+    int count;
+    unsigned char value;
+    unsigned char *q;
+
+    if (!image->pack) {
+        for (count=0; count < (int)image->rows; count++) {
+            if (!image->previous) {
+                if (image->columns) {
+                    q=pixels;
+                    do {
+                        WriteBlobByte(blob,*q++);
+                    } while ((q-pixels) < (int)image->columns);
+                    pixels=q;
+                }
+                continue;
+            }
+            q=pixels+1;
+            value=*pixels;
+            if ((int)image->columns <= 1)
+                break;
+            count=1;
+            do {
+                if ((*q == value) && (count < 63))
+                    count++;
+                else {
+                    if ((count > 1) || ((value & 0xc0) == 0xc0))
+                        WriteBlobByte(blob,count|0xc0);
+                    WriteBlobByte(blob,value);
+                    value=*q;
+                    count=1;
+                }
+                q++;
+            } while ((q-pixels) < (int)image->columns);
+            if (count <= 1) {
+                if ((value & 0xc0) != 0xc0) {
+                    WriteBlobByte(blob,value);
+                    continue;
+                }
+            }
+            WriteBlobByte(blob,count|0xc0);
+            pixels=q;
+            WriteBlobByte(blob,value);
+            if (++count >= (int)image->rows)
+                return 1;
+        }
+    }
+    return 1;
+}
+/////
+predict control flow: {if (!)for (){if (==)elseif (!=)if ()}if (!||)else}
+char *__fastcall c_escape(char *a1)
+{
+    char *result;
+    char *src_ptr;
+    char current_char;
+    int needs_quote = 0;
+    size_t alloc_size = 0;
+
+    for (src_ptr = a1, current_char = *src_ptr; current_char; current_char = *++src_ptr) {
+        if (current_char == ' ') {
+            needs_quote = 1;
+        } else {
+            char esc_type = c_escape_char(current_char);
+            if (esc_type) {
+                alloc_size += (esc_type == 1) ? 3 : 1;
+            }
+        }
+    }
+
+    if (alloc_size || needs_quote) {
+        char *dest_ptr = (char *)xmalloc(alloc_size + (src_ptr - a1) + 3);
+        *dest_ptr = '"';
+        char *write_ptr = dest_ptr + 1;
+
+        for (char *p = a1; *p; ++p) {
+            char esc_code = c_escape_char(*p);
+            if (esc_code) {
+                *write_ptr++ = '\\';
+                if (esc_code == 1) {
+                    *write_ptr++ = ((*p >> 6) & 7) + '0';
+                    *write_ptr++ = ((*p >> 3) & 7) + '0';
+                    *write_ptr++ = (*p & 7) + '0';
+                } else {
+                    *write_ptr++ = esc_code;
+                }
+            } else {
+                *write_ptr++ = *p;
+            }
+        }
+
+        *write_ptr++ = '"';
+        *write_ptr = 0;
+        result = dest_ptr;
+    } else {
+        result = a1;
+    }
+
+    return result;
+}

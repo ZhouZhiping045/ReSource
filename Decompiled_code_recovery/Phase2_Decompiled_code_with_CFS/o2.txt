@@ -1,0 +1,107 @@
+predict control flow: {for (<){if (==)if (!=)if (>){}elseif (){}else{}}if (<)if ()}
+__int64 __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3)
+{
+  if ( *(_BYTE *)(a1 + 17) )
+  {
+    for (int v13 = 0; ; ++v13)
+    {
+      unsigned __int16 width = *(_WORD *)(a1 + 18);
+      if ( !*(_BYTE *)(a1 + 2) )
+      {
+        if ( width )
+        {
+          unsigned __int8 *end = a2 + width;
+          while (a2 < end)
+            WriteBlobByte(a3, *a2++);
+        }
+      }
+      else
+      {
+        unsigned __int8 val = *a2++;
+        unsigned __int8 run_length = 1;
+        for (unsigned __int8 *current = a2; current < a2 + width - 1; ++current)
+        {
+          if (*current == val && run_length < 0x3F)
+          {
+            ++run_length;
+          }
+          else
+          {
+            if (run_length > 1 || (val & 0xC0) == 0xC0)
+              WriteBlobByte(a3, run_length | 0xC0);
+            WriteBlobByte(a3, val);
+            val = *current;
+            run_length = 1;
+          }
+        }
+        if (run_length > 1 || (val & 0xC0) == 0xC0)
+          WriteBlobByte(a3, run_length | 0xC0);
+        WriteBlobByte(a3, val);
+        a2 += width - 1;
+      }
+
+      if (*(_BYTE *)(a1 + 17) <= v13 + 1)
+        return 1LL;
+    }
+  }
+  return 1LL;
+}
+/////
+predict control flow: {if (!)for (<&&)if (!=)if (==)else}
+char *__fastcall c_escape(char *str)
+{
+    char *src = str;
+    if (!*src)
+        return src;
+
+    char *cur = src;
+    size_t extra_len = 0;
+    int had_space = 0;
+
+    while (*cur) {
+        while (*cur == ' ') {
+            ++cur;
+            had_space = 1;
+            if (!*cur)
+                goto alloc_check;
+        }
+
+        char esc = c_escape_char(*cur);
+        if (esc) {
+            extra_len += (esc == 1) ? 3 : 1;
+        }
+        ++cur;
+    }
+
+alloc_check:
+    if (!extra_len && !had_space)
+        return src;
+
+    _BYTE *buf = xmalloc(extra_len + (cur - src) + 3);
+    *buf = '"';
+    _BYTE *dst = buf + 1;
+
+    for (char *p = src; *p; ) {
+        char c = *p;
+        char esc = c_escape_char(c);
+
+        if (!esc) {
+            *dst++ = c;
+            ++p;
+            continue;
+        }
+
+        *dst++ = '\\';
+        if (esc == 1) {
+            *dst++ = ((c >> 6) & 3) + '0';
+            *dst++ = ((c >> 3) & 7) + '0';
+            *dst++ = (c & 7) + '0';
+        } else {
+            *dst++ = esc;
+        }
+        ++p;
+    }
+
+    *dst++ = '"';
+    return buf;
+}

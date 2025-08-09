@@ -1,0 +1,414 @@
+__int64 __fastcall PCXWritePixels(__int64 a1, unsigned __int8 *a2, __int64 a3) // Guidance: ['Ensure return type matches all possible exit paths', 'Validate exception propagation mechanisms']
+{
+int v3; // Guidance: ["Check semantics to determine if redundant"]
+int v4; // Guidance: ["Check semantics to determine if redundant"]
+int v5; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 *v6; // Guidance: ["Check semantics to determine if redundant"]
+unsigned __int8 *v7;
+int v8;
+unsigned __int8 *v9;
+int v10;
+int v11;
+int v12;
+int v13;
+int v14;
+int v15;
+int v17;
+unsigned __int8 v18;
+unsigned __int8 v19;
+__int64 v20;
+__int64 v21;
+__int64 v22;
+v22 = 0LL; // Guidance: ['Reset parameter counter appropriately in nested contexts']
+v17 = 1514224881; // Guidance: ["Check semantics to determine if redundant"]
+while ( 1 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+while ( 1 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+while ( v17 == -1550062181 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+v13 = 410587543; // Guidance: ["Check semantics to determine if redundant"]
+if ( (v18 & 0xC0) == 192 )
+v13 = -933314260; // Guidance: ["Check semantics to determine if redundant"]
+v17 = v13;
+}
+if ( v17 != -1386101349 ) // Guidance: ["Check semantics to determine if redundant"]
+break; // Guidance: ["Check semantics to determine if redundant"]
+v17 = 1627667587;
+WriteBlobByte(a3, v18);
+}
+if ( v17 == -1247362747 ) // Guidance: ["Check semantics to determine if redundant"]
+break;
+switch ( v17 )
+{
+case -970732051: // Guidance: ["Check semantics to determine if redundant"]
+++v22;
+v17 = 1514224881;
+break;
+case -933314260:
+v20 |= 0xC0uLL;
+v17 = 410587543;
+WriteBlobByte(a3, (unsigned __int8)v20); // Guidance: ['Implement I/O error checking', 'Use buffered write operations']
+break;
+case -912330403:
+v6 = a2++;
+v17 = 328699792;
+WriteBlobByte(a3, *v6);
+break;
+case -744392202:
+v20 |= 0xC0uLL;
+v17 = -1386101349;
+WriteBlobByte(a3, (unsigned __int8)v20); // Guidance: ['Implement I/O error checking', 'Use buffered write operations']
+break;
+case -555925399:
+++v21;
+v17 = -548424178;
+break;
+case -548424178:
+v8 = 800023940;
+if ( v21 < *(unsigned __int16 *)(a1 + 18) - 1 ) // Guidance: ['Check semantics to avoid distortion']
+v8 = 110774267;
+v17 = v8;
+break;
+case -417259740:
+++v20;
+v17 = -555925399;
+break;
+case -352060497:
+v15 = -1386101349;
+if ( (v18 & 0xC0) == 192 )
+v15 = -744392202;
+v17 = v15;
+break;
+case -94470526:
+v21 = 0LL;
+v17 = 1983248977;
+break;
+case 110774267:
+v9 = a2++;
+v19 = *v9;
+v10 = 1863793261;
+if ( *v9 == v18 )
+v10 = 480521325;
+v17 = v10;
+break;
+case 328699792:
+++v21;
+v17 = 1983248977;
+break;
+case 410587543:
+WriteBlobByte(a3, v18);
+v18 = v19;
+v20 = 1LL;
+v17 = -555925399;
+break;
+case 480521325:
+v11 = 1863793261;
+if ( v20 < 63 )
+v11 = -417259740;
+v17 = v11;
+break;
+case 800023940:
+v14 = -352060497;
+if ( v20 > 1 )
+v14 = -744392202;
+v17 = v14;
+break;
+case 1076648587:
+v7 = a2++;
+v18 = *v7;
+v20 = 1LL;
+v21 = 0LL;
+v17 = -548424178;
+break;
+case 1514224881:
+v3 = -1247362747;
+if ( v22 < *(unsigned __int8 *)(a1 + 17) )
+v3 = 1637627441;
+v17 = v3;
+break;
+case 1627667587:
+v17 = -970732051;
+break;
+case 1637627441:
+v4 = 1076648587;
+if ( !*(_BYTE *)(a1 + 2) )
+v4 = -94470526;
+v17 = v4;
+break;
+case 1812952290:
+v17 = 1627667587;
+break;
+case 1863793261:
+v12 = -1550062181;
+if ( v20 > 1 )
+v12 = -933314260;
+v17 = v12;
+break;
+default:
+v5 = 1812952290;
+if ( v21 < *(unsigned __int16 *)(a1 + 18) )
+v5 = -912330403;
+v17 = v5;
+break;
+}
+}
+return 1LL; // Guidance: ['Confirm SAFE_READ_ERROR mapping']
+}
+/////
+char *__fastcall c_escape(char *a1)
+{
+int v1; // Guidance: ["Check semantics to determine if redundant"]
+int v2; // Guidance: ["Check semantics to determine if redundant"]
+int v3; // Guidance: ["Check semantics to determine if redundant"]
+int v4; // Guidance: ["Check semantics to determine if redundant"]
+int v5;
+int v6;
+int v7;
+int v8;
+int v9;
+int v10;
+int v11;
+char *v12;
+_BYTE *v13;
+_BYTE *v14;
+char *v15;
+int v17;
+char v18;
+char v19;
+char *v20;
+char *v21;
+char v22;
+__int64 v23;
+char *v24;
+char *v25;
+int v26;
+int v27;
+v23 = 0LL; // Guidance: ["Check semantics to determine if redundant"]
+v22 = 0; // Guidance: ["Check semantics to determine if redundant"]
+v24 = a1;
+v17 = -1142143274; // Guidance: ["Check semantics to determine if redundant"]
+while ( 1 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+while ( 1 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+while ( 1 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+while ( 1 ) // Guidance: ["Check semantics to determine if redundant"]
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( 1 )
+{
+while ( v17 == -2144662679 )
+{
+v21 = (char *)xmalloc(v23 + v24 - a1 + 3); // Guidance: ['Ensure memory allocation parameters match function signature (element count, size)', 'Verify allocation size aligns with intended buffer usage']
+v20 = v21 + 1;
+*v21 = 34; // Guidance: ["Check semantics to determine if redundant"]
+v24 = a1;
+v17 = 1452866522;
+}
+if ( v17 != -1775287434 ) // Guidance: ["Check semantics to determine if redundant"]
+break;
+v22 = 1;
+v17 = 215713691;
+}
+if ( v17 != -1487807926 ) // Guidance: ["Check semantics to determine if redundant"]
+break;
+v25 = a1;
+v17 = 1399157883;
+}
+if ( v17 != -1257683769 ) // Guidance: ["Check semantics to determine if redundant"]
+break;
+v19 = *v24;
+v18 = c_escape_char(*v24);
+v27 = v18;
+v17 = -234412716;
+}
+if ( v17 != -1233726593 ) // Guidance: ["Check semantics to determine if redundant"]
+break;
+++v24;
+v17 = 1452866522;
+}
+if ( v17 != -1142143274 )
+break;
+v1 = 358751484;
+if ( *v24 )
+v1 = 810207304;
+v17 = v1;
+}
+if ( v17 != -829693710 )
+break;
+++v23;
+v17 = -613484905;
+}
+if ( v17 != -613484905 )
+break;
+v17 = 215713691;
+}
+if ( v17 != -567128970 )
+break;
+v17 = -613484905;
+}
+if ( v17 != -384896809 )
+break;
+v11 = 2114144697;
+if ( !v27 )
+v11 = 2071086969;
+v17 = v11;
+}
+if ( v17 != -283062881 )
+break;
+v10 = 2114144697;
+if ( v27 == 1 )
+v10 = 1529361946;
+v17 = v10;
+}
+if ( v17 != -261403286 )
+break;
+v23 += 3LL;
+v17 = -567128970;
+}
+if ( v17 != -234412716 )
+break;
+v9 = -283062881;
+if ( v27 < 1 )
+v9 = -384896809;
+v17 = v9;
+}
+if ( v17 != 40632383 )
+break;
+v17 = -829693710;
+}
+if ( v17 != 215713691 )
+break;
+++v24;
+v17 = -1142143274;
+}
+if ( v17 != 358751484 )
+break;
+v6 = 1885487505;
+if ( (v22 & 1) != 0 )
+v6 = -2144662679;
+v17 = v6;
+}
+if ( v17 != 519718735 )
+break;
+v4 = 40632383;
+if ( v26 == 1 )
+v4 = -261403286;
+v17 = v4;
+}
+if ( v17 != 530145163 )
+break;
+*v20 = 92;
+v14 = v20 + 1;
+v20 += 2;
+*v14 = v18;
+v17 = 824207257;
+}
+if ( v17 != 771289132 )
+break;
+v5 = 40632383;
+if ( !v26 )
+v5 = -567128970;
+v17 = v5;
+}
+if ( v17 != 779390101 )
+break;
+v26 = (char)c_escape_char(*v24);
+v17 = 1959572569;
+}
+if ( v17 != 810207304 )
+break;
+v2 = 779390101;
+if ( *v24 == 32 )
+v2 = -1775287434;
+v17 = v2;
+}
+if ( v17 != 824207257 )
+break;
+v17 = -1233726593;
+}
+if ( v17 == 1399157883 )
+break;
+switch ( v17 )
+{
+case 1452866522:
+v8 = 2083704092;
+if ( *v24 )
+v8 = -1257683769;
+v17 = v8;
+break;
+case 1529361946:
+*v20 = 92;
+v20[1] = ((v19 >> 6) & 3) + 48;
+v20[2] = ((v19 >> 3) & 7) + 48;
+v13 = v20 + 3;
+v20 += 4;
+*v13 = (v19 & 7) + 48;
+v17 = 824207257;
+break;
+case 1885487505:
+v7 = -1487807926;
+if ( v23 )
+v7 = -2144662679;
+v17 = v7;
+break;
+case 1959572569:
+v3 = 519718735;
+if ( v26 < 1 )
+v3 = 771289132;
+v17 = v3;
+break;
+case 2071086969:
+v12 = v20++;
+*v12 = v19;
+v17 = 824207257;
+break;
+case 2083704092:
+v15 = v20++;
+*v15 = 34;
+*v20 = 0;
+v25 = v21;
+v17 = 1399157883;
+break;
+default:
+v17 = 530145163;
+break;
+}
+}
+return v25; // Guidance: ["Check semantics to determine if redundant"]
+}
