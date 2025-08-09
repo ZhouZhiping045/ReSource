@@ -20,13 +20,12 @@ It leverages a curated database of decompilation artifacts paired with their sou
 
 
 
-\## Citation
 
-If you use this module or its concepts in your research, please cite our paper (citation details will be updated after acceptance).
 
 
 
 ---
+
 
 
 
