@@ -44,9 +44,9 @@ This repository provides a set of tools for recovering decompiled code, predicti
 
 &nbsp;  - This file lists the required dependencies and libraries needed to run the scripts and modules in this repository. You can install the dependencies with:
 
-&nbsp;    ```bash
+&nbsp;    
     pip install -r requirements.txt
-&nbsp;    ```
+   
 
 ## Usage
 
@@ -72,3 +72,4 @@ Once the relevant modules are available, you can use them in the following manne
 - **construct_semantic_database** and **control_flow_predict** modules are currently under development. These modules will be available after the paper is accepted and the repository is updated.
 
 </xaiArtifact>
+
