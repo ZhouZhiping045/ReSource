@@ -78,31 +78,31 @@ Once the relevant modules are available, you can use them in the following manne
 
 1\. \*\*Semantic Database Construction \& Prediction\*\*:  
 
-&nbsp;  Use the `construct\_semantic\_database` module to generate and predict semantic recovery suggestions for decompiled code.
+&nbsp;  Use the `construct_semantic_database` module to generate and predict semantic recovery suggestions for decompiled code.
 
 
 
 2\. \*\*Control Flow Prediction\*\*:  
 
-&nbsp;  Use the `control\_flow\_predict` module to predict the control flow structures for the decompiled code.
+&nbsp;  Use the `control_flow_predict` module to predict the control flow structures for the decompiled code.
 
 
 
 3\. \*\*Decompiled Code Recovery\*\*:  
 
-&nbsp;  Use the `Decompiled\_code\_recovery` module to recover decompiled functions by optimizing their lexical, semantic, and structural aspects.
+&nbsp;  Use the `Decompiled_code_recovery` module to recover decompiled functions by optimizing their lexical, semantic, and structural aspects.
 
 
 
 4\. \*\*Similarity Detection\*\*:  
 
-&nbsp;  Use the `Similarity\_detection` module to compute function similarity using embeddings.
+&nbsp;  Use the `Similarity_detection` module to compute function similarity using embeddings.
 
 
 
-5\. \*\*Similarity Evaluation\*\*:  
+5\. \*\*Code Similarity Evaluation\*\*:  
 
-&nbsp;  Use the `Similarity\_Evaluate` module to evaluate how well the recovered code matches the source or function library.
+&nbsp;  Use the `Code_Similarity_Evaluate` module to evaluate how well the recovered code matches the source or function library.
 
 
 
@@ -111,6 +111,7 @@ Once the relevant modules are available, you can use them in the following manne
 
 
 \- \*\*construct\_semantic\_database\*\* and \*\*control\_flow\_predict\*\* modules are currently under development. These modules will be available after the paper is accepted and the repository is updated.
+
 
 
 
