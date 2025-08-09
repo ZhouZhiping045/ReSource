@@ -30,9 +30,9 @@ This setup is designed to generate embeddings for decompiled code using `GraphCo
 
 
 
-\- The \*\*embedding generation process\*\* is handled by `1-direct\_code\_embedding.py`, which processes decompiled code and stores the embeddings in `.npy` format.
+\- The \*\*embedding generation process\*\* is handled by `1-direct_code_embedding.py`, which processes decompiled code and stores the embeddings in `.npy` format.
 
-\- The \*\*detection process\*\* is handled by `2-detection.py`, which compares the decompiled code embeddings against a pre-generated function library (`function\_library\_embeddings.npy`) and outputs the top-1, top-3, and top-5 similarity results.
+\- The \*\*detection process\*\* is handled by `2-detection.py`, which compares the decompiled code embeddings against a pre-generated function library (`function_library_embeddings.npy`) and outputs the top-1, top-3, and top-5 similarity results.
 
 
 
@@ -51,6 +51,7 @@ python 1-direct_code_embedding.py
 To detect similarity between the decompiled code and the function library:
 
 python 2-detection.py 
+
 
 
 
